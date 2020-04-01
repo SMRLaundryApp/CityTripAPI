@@ -20,7 +20,6 @@ services:
         image: mysql
         command: "--default-authentication-plugin=mysql_native_password"
         container_name: citytrip_sf4_mysql
-
         volumes:
             - .docker/data/db:/var/lib/mysql
         environment:
@@ -29,6 +28,8 @@ services:
             MYSQL_USER: ClotheCare
             MYSQL_PASSWORD: ClotheCare
         restart: always
+        ports:
+          - 33061:3306
 
     php:
         build: .docker/php
@@ -40,8 +41,6 @@ services:
         depends_on:
           - maildev
           - mysql
-        ports:
-          - 33060:3306
         restart: always
 
     phpmyadmin:
