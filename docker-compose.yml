@@ -4,7 +4,9 @@ services:
         build: .docker/apache
         container_name: citytrip_sf4_apache
         environment:
-          VIRTUAL_HOST:  citytrip.trifall.net
+          - VIRTUAL_HOST= citytrip.trifall.net
+          - VIRTUAL_PROTO= https
+          - VIRTUAL_PORT= 8083
         ports:
           - 8083:80
         volumes:
