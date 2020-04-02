@@ -5,8 +5,8 @@ services:
         container_name: citytrip_sf4_apache
         environment:
           VIRTUAL_HOST: citytrip.trifall.net
-        expose:
-          - 80
+        ports:
+          - 80:80
         volumes:
           - .docker/config/vhosts:/etc/apache2/sites-enabled
           - .:/home/wwwroot/sf4
