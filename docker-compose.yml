@@ -1,12 +1,28 @@
 version: '3'
 services:
+    nginx-proxy:
+      image: jwilder/nginx-proxy:alpine
+      restart: always
+      ports:
+        - 80:80
+        - 443:443
+      volumes:
+        - /etc/nginx/certs
+        - /etc/nginx/vhost.d
+        - /usr/share/nginx/html
+        - /var/run/docker.sock:/tmp/docker.sock:ro
+      labels:
+        - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     apache:
         build: .docker/apache
         container_name: citytrip_sf4_apache
         environment:
-          VIRTUAL_HOST: citytrip.trifall.net
+          VIRTUAL_HOST: citytrip.trifall.net,citytrip,citytrip.urenapi.nl, localhost
+          VIRTUAL_PORT: 80
+        expose:
+          - 80
         ports:
-          - 80:80
+          - 8085:80
         volumes:
           - .docker/config/vhosts:/etc/apache2/sites-enabled
           - .:/home/wwwroot/sf4
@@ -35,7 +51,7 @@ services:
         volumes:
           - .:/home/wwwroot/sf4
         environment:
-          - maildev_host=sf4_maildev
+          - maildev_host=citytrip_sf4_maildev
         depends_on:
           - maildev
           - mysql
@@ -47,6 +63,8 @@ services:
         environment:
           PMA_HOST: mysql
           PMA_PORT: 3306
+          PMA_USER: root
+          PMA_PASSWORD: root
         ports:
             - 8081:80
         links:
