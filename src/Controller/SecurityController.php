@@ -58,20 +58,27 @@ class SecurityController extends AbstractController
     public function index(EntityManagerInterface $em, Request $request)
     {
         $data = json_decode($request->getContent(), true);
+        $userCheck = $this->getDoctrine()->getRepository(user::class)->findOneBy( ['username'=>$data['username']]);
+        if (!empty($userCheck)) {
+            $user = new user();
+            $user->setEmail($data['email']);
+            $user->setUsername($data['username']);
+            $user->setRoles(["ROLE_USER"]);
+            $user->setPassword($this->passwordEncoder->encodePassword(
+                $user,
+                $data['password']
+            ));
+            $em->persist($user);
+            $em->flush();
 
-        $user = new user();
-        $user->setEmail($data['email']);
-        $user->setUsername($data['username']);
-        $user->setRoles(["ROLE_USER"]);
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
-            $data['password']
-        ));
-        $em->persist($user);
-        $em->flush();
-        return $this->json([
-            'user' => $user,
-        ]);
+            return $this->json([
+                'user' => $user,
+            ]);
+        }else{
+            return $this->json([
+                'error' => "this user already exists",
+            ]);
+        }
     }
 
     /**
