@@ -55,16 +55,20 @@ class SecurityController extends AbstractController
     /**
      * @Route("/api/Users/maker", name="api_user", methods={"POST"})
      */
-    public function index(Request $request)
+    public function index(EntityManagerInterface $em, Request $request)
     {
+        $data = json_decode($request->getContent(), true);
+
         $user = new user();
-        $user->setEmail($request->get('email'));
-        $user->setUsername($request->get('Username'));
+        $user->setEmail($data['email']);
+        $user->setUsername($data['username']);
         $user->setRoles(["ROLE_USER"]);
         $user->setPassword($this->passwordEncoder->encodePassword(
             $user,
-            $request->get('Password')
+            $data['password']
         ));
+        $em->persist($user);
+        $em->flush();
         return $this->json([
             'user' => $user,
         ]);

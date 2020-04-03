@@ -56,32 +56,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        $.post('https://trifall.net/api/login',   // url
-            JSON.stringify({
-                username: "TyreekMetz",
-                password: "engage"
-            }), // data to be submit
-            function(data, status, jqXHR) {// success callback
-                $('p').append('status: ' + status + ', data: ' + data);
-            });
-        $.ajax({
-            type: "POST",
-            url: "https://trifall.net/api/login",
-            data: JSON.stringify({
-                "username": "TyreekMetz",
-                "password": "engage"
-            }),
-            contentType: 'application/json',
-        }).done(function( data ) {
-            alert( "Data Loaded: " + data );
-        });
-        $.ajax({
-            type: "GET",
-            url: "https://trifall.net/api/labels",
-            contentType: 'application/json',
-        }).done(function( data ) {
-            alert( "Data Loaded: " + data );
-        });
-    </script>
+
 {% endblock %}

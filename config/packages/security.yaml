@@ -6,7 +6,7 @@ security:
         master_provider:
             entity:
                 class: App\Entity\User
-                property: username
+                property: email
     firewalls:
 
         dev:
@@ -20,7 +20,7 @@ security:
                 provider: master_provider
             json_login:
                 check_path:    app_api_login
-                username_path: username
+                username_path: email
                 password_path: password
             logout:
                 path: /logout
@@ -39,8 +39,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/Users/maker , roles: IS_AUTHENTICATED_ANONYMOUSLY,  methods: POST }
-        - { path: ^/api , roles: ROLE_ADMIN,  methods: DELETE }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/api , roles: ROLE_ADMIN,  methods: DELETE }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/api , roles: ROLE_USER}
         - { path: ^/, roles: ROLE_USER }
