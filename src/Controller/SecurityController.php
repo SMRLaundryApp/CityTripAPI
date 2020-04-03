@@ -59,7 +59,7 @@ class SecurityController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $userCheck = $this->getDoctrine()->getRepository(user::class)->findOneBy( ['username'=>$data['username']]);
-        if (!empty($userCheck)) {
+        if (empty($userCheck)) {
             $user = new user();
             $user->setEmail($data['email']);
             $user->setUsername($data['username']);
@@ -99,9 +99,7 @@ class SecurityController extends AbstractController
         }
 
         return $this->json([
-                'user' => $this->getUser() ? $this->getUser()->getId() : null,
-                'roles' => $this->getUser() ? $this->getUser()->getRoles() : null,
-                'Token' => $token,
+                'user' => $this->getUser() ? $this->getUser() : null
             ]
         );
     }
