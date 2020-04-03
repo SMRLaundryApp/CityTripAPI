@@ -58,7 +58,7 @@ class SecurityController extends AbstractController
     public function index(EntityManagerInterface $em, Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $userCheck = $this->getDoctrine()->getRepository(user::class)->findOneBy( ['username'=>$data['username']]);
+        $userCheck = $this->getDoctrine()->getRepository(user::class)->findOneBy( ['username'=>$data['username'],'email'=>$data['email']]);
         if (empty($userCheck)) {
             $user = new user();
             $user->setEmail($data['email']);
