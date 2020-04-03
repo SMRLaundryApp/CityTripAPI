@@ -19,12 +19,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
 
-    private $encoder;
+    private $passwordEncoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
-        $this->encoder= $encoder;
+        $this->passwordEncoder = $passwordEncoder;
     }
+
 
     /**
      * @Route("/login", name="app_login")
@@ -49,6 +50,26 @@ class SecurityController extends AbstractController
             ]);
         }
     }
+
+
+    /**
+     * @Route("/api/Users/maker", name="api_user", methods={"POST"})
+     */
+    public function index(Request $request)
+    {
+        $user = new user();
+        $user->setEmail($request->get('email'));
+        $user->setUsername($request->get('Username'));
+        $user->setRoles(["ROLE_USER"]);
+        $user->setPassword($this->passwordEncoder->encodePassword(
+            $user,
+            $request->get('Password')
+        ));
+        return $this->json([
+            'user' => $user,
+        ]);
+    }
+
     /**
      * @Route("/api/login", name="app_api_login", methods={"POST"})
      * @param Request $request
