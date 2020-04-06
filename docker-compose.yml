@@ -13,7 +13,7 @@ services:
         - /var/run/docker.sock:/tmp/docker.sock:ro
       labels:
         - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
-    apache:
+    citytrip_apache:
         build: .docker/apache
         container_name: citytrip_sf4_apache
         environment:
@@ -27,10 +27,10 @@ services:
           - .docker/config/vhosts:/etc/apache2/sites-enabled
           - .:/home/wwwroot/sf4
         depends_on:
-          - php
+          - citytrip_php
         restart: always
 
-    mysql:
+    citytrip_mysql:
         image: mysql
         command: "--default-authentication-plugin=mysql_native_password"
         container_name: citytrip_sf4_mysql
@@ -45,7 +45,7 @@ services:
         ports:
           - 33061:3306
 
-    php:
+    citytrip_php:
         build: .docker/php
         container_name: citytrip_sf4_php
         volumes:
@@ -53,25 +53,25 @@ services:
         environment:
           - maildev_host=citytrip_sf4_maildev
         depends_on:
-          - maildev
-          - mysql
+          - citytrip_maildev
+          - citytrip_mysql
         restart: always
 
-    phpmyadmin:
+    citytrip_phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: citytrip_sf4_phpmyadmin
         environment:
-          PMA_HOST: mysql
+          PMA_HOST: citytrip_mysql
           PMA_PORT: 3306
           PMA_USER: root
           PMA_PASSWORD: root
         ports:
             - 8081:80
         links:
-            - mysql
+            - citytrip_mysql
         restart: always
 
-    maildev:
+    citytrip_maildev:
         image: djfarrelly/maildev
         container_name: citytrip_sf4_maildev
         ports:
