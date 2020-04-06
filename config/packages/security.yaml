@@ -6,7 +6,7 @@ security:
         master_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: [email, username]
     firewalls:
 
         dev:
@@ -20,7 +20,7 @@ security:
                 provider: master_provider
             json_login:
                 check_path:    app_api_login
-                username_path: email
+                username_path: login
                 password_path: password
             logout:
                 path: /logout

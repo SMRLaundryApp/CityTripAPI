@@ -10,22 +10,31 @@ use ApiPlatform\Core\Annotation\ApiResource;
     *
     * @ApiResource()
     * @ORM\Table(name="app_users")
+    * @UniqueEntity(fields="email", message="Email already taken")
+    * @UniqueEntity(fields="username", message="Username already taken")
     * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
     */
 class User implements UserInterface, \Serializable
 {
-        /**
-        * @ORM\Column(type="integer")
-        * @ORM\Id
-        * @ORM\GeneratedValue(strategy="AUTO")
-        */
+    /**
+    * @ORM\Column(type="integer")
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
     private $id;
 
-        /**
-        * @ORM\Column(name="username",type="string", length=25, unique=true)
-        */
-    private $username;
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     */
+    private $email;
 
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     */
+    private $username;
 
     /**
      * @ORM\Column(name="roles", type="json", nullable=false)
@@ -37,15 +46,10 @@ class User implements UserInterface, \Serializable
     * @ORM\Column(type="string", length=64)
     */
     private $password;
-
-        /**
-        * @ORM\Column(type="string", length=254, unique=true)
-        */
-    private $email;
-
-        /**
-        * @ORM\Column(name="is_active", type="boolean")
-        */
+    
+    /**
+    * @ORM\Column(name="is_active", type="boolean")
+    */
     private $isActive;
 
     /**
@@ -53,11 +57,16 @@ class User implements UserInterface, \Serializable
      */
     private $apiToken;
 
+    /**
+     * @var string
+     */
+    private $salt;
+
     public function __construct()
     {
         $this->isActive = true;
         // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
+        $this->salt = md5(uniqid('', true));
     }
 
     public function getUsername()
@@ -97,7 +106,7 @@ class User implements UserInterface, \Serializable
         $this->username,
         $this->password,
         // see section on salt below
-        // $this->salt,
+        $this->salt,
         ));
     }
 
