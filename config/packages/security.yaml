@@ -5,8 +5,8 @@ security:
     providers:
         master_provider:
             entity:
-                class: App\Entity\User
-                property: [email, username]
+              {class: App\Entity\User, property: username}
+              {class: App\Entity\User, property: email}
     firewalls:
 
         dev:
