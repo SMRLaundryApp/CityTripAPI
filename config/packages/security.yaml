@@ -5,7 +5,8 @@ security:
     providers:
         master_provider:
             entity:
-              {class: App\Entity\User, property: username}
+                class: App\Entity\User
+                property: username
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

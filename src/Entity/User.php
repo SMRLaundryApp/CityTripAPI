@@ -2,6 +2,8 @@
 // src/Entity/User.php
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -64,11 +66,17 @@ class User implements UserInterface, \Serializable
      */
     private $salt;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Category", mappedBy="Users")
+     */
+    private $categories;
+
     public function __construct()
     {
         $this->isActive = true;
         // may not be needed, see section on salt below
         $this->salt = md5(uniqid('', true));
+        $this->categories = new ArrayCollection();
     }
 
     public function getUsername()
@@ -170,6 +178,34 @@ class User implements UserInterface, \Serializable
     public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+            $category->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+            $category->removeUser($this);
+        }
 
         return $this;
     }

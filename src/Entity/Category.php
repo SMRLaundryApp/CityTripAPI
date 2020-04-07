@@ -30,9 +30,15 @@ class Category
      */
     private $pointOfInterests;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="categories")
+     */
+    private $Users;
+
     public function __construct()
     {
         $this->pointOfInterests = new ArrayCollection();
+        $this->Users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,6 +81,32 @@ class Category
         if ($this->pointOfInterests->contains($pointOfInterest)) {
             $this->pointOfInterests->removeElement($pointOfInterest);
             $pointOfInterest->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->Users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->Users->contains($user)) {
+            $this->Users[] = $user;
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->Users->contains($user)) {
+            $this->Users->removeElement($user);
         }
 
         return $this;
