@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class OpenController extends AbstractController
@@ -20,7 +22,7 @@ class OpenController extends AbstractController
         ]);
     }
     /**
-     * @Route("/api/CatergoryAdding/{user}", name="api_user_category", methods={"PATCH"})
+     * @Route("/api/CatergoryAdding/{user}", name="api_user_category", methods={"POST"})
      */
     public function Category($user, EntityManagerInterface $em, Request $request)
     {
@@ -34,7 +36,7 @@ class OpenController extends AbstractController
                 $em->flush();
             }
             return $this->json([
-                'user' => $user,
+                'user' => $userCheck,
             ]);
         }else{
             return $this->json([
