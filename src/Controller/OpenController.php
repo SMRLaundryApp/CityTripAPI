@@ -22,13 +22,19 @@ class OpenController extends AbstractController
         ]);
     }
     /**
-     * @Route("/api/CatergoryAdding/{user}", name="api_user_category", methods={"POST"})
+     * @Route("/api/CategoryAdding/{user}", name="api_user_category", methods={"POST"})
      */
-    public function Category($user, EntityManagerInterface $em, Request $request)
+    public function CategoryToUser($user, EntityManagerInterface $em, Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $userCheck = $this->getDoctrine()->getRepository(User::class)->find($user);
         if (!empty($userCheck)) {
+            $Categories = $userCheck->getCategories();
+            foreach ($Categories as $category){
+                $userCheck->removeCategory($category);
+                $em->persist($userCheck);
+                $em->flush();
+            }
             foreach ($data['categories'] as $categoryId){
                 $Category = $this->getDoctrine()->getRepository(Category::class)->find($categoryId);
                 $userCheck->addCategory($Category);
