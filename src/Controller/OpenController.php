@@ -20,7 +20,7 @@ class OpenController extends AbstractController
         ]);
     }
     /**
-     * @Route("/api/CatergoryAdding/{user}", name="api_user_category", methods={"POST"})
+     * @Route("/api/CatergoryAdding/{user}", name="api_user_category", methods={"PATCH"})
      */
     public function Category($user, EntityManagerInterface $em, Request $request)
     {
