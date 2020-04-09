@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Category
 {
     /**
+     * @ApiProperty(identifier=true)
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
